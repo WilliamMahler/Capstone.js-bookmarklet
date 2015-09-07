@@ -42,7 +42,7 @@
 <h3>
 <a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<p>Select any bytecode on any page that you would like to disassemble and then click the <a href="javascript:(function(){var script=document.createElement('SCRIPT');script.src='//s3.amazonaws.com/bookmarkletdisassembler/bookmarklet.js';document.body.appendChild(script);})()">Inline Disassembler</a> link or your bookmarklet. The disassembly engine will load for a moment and then prompt you to set configuration options before beginning disassembly.</p>
+<p>Select any bytecode on any page that you would like to disassemble and then click the <a href="javascript:(function(){var script=document.createElement('SCRIPT');script.src='//s3.amazonaws.com/bookmarkletdisassembler/bookmarklet.js';document.body.appendChild(script);})()">Inline Disassembler</a> link. The disassembly engine will load for a moment and then prompt you to set configuration options before beginning disassembly.</p>
 
 <h3>
 <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
