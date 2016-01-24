@@ -11,7 +11,8 @@
     		masterDOMReadyDelay = performance.now() - masterDOMReadyDelay;
     		CDNLoadTime = performance.now();
 	    	var jsCode = document.createElement('script');
-	    	jsCode.setAttribute('src', 'https://basicedit.com/changes.js');
+	    	//jsCode.setAttribute('src', 'https://basicedit.com/changes.js'); //production
+	    	jsCode.setAttribute('src', 'https://s3.amazonaws.com/basicedit/changes.js'); //development
 	    	document.body.appendChild(jsCode);
     	}
     	
