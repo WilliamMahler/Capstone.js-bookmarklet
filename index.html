@@ -1,50 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>  	
-
-  	
-  	
-	<style>
-		/*
-		* {
-		    animation-name: nodeReady;
-		    animation-duration: 0.001s;
-		}
-		@keyframes nodeReady {  
-		    from { clip: rect(1px, auto, auto, auto); }
-		    to { clip: rect(0px, auto, auto, auto); }  
-		}
-		*/
-	</style>
-    
-    <script>
-    	/*   	
-			document.addEventListener("animationstart", function(e) {
-			  if (e.animationName == "nodeReady") {							
-					var runChildren = function(node){
-						var children = node.childNodes;		
-						for (var i = 0; i < children.length; i++) {
-							if(children[i].hasChildNodes()){
-								runChildren(children[i]);
-							}else{
-					  		if(children[i].nodeType==3){
-					  			if(editLookup[getParents(children[i])] !== undefined ){
-					  				if(editLookup[getParents(children[i])].oldContent == children[i].textContent){
-					  					children[i].textContent = editLookup[getParents(children[i])].newContent;
-					  				}
-					  			}
-					  		}					
-							}
-						}
-					};
-			  		
-			  	if(e.target.hasChildNodes()){
-			  		runChildren(e.target);
-			  	}
-			  }
-			}, false);
-			*/
-    </script>
+  <head> 
     <meta charset="UTF-8">
     <title>Disassemble bytes directly from any webpage by William Mahler</title>
     <script>
@@ -85,12 +41,22 @@
 	  <link rel="icon" type="image/png" sizes="16x16" href="/Capstone.js-bookmarklet/icons/favicon-16x16.png">
 	  <link rel="manifest" href="/Capstone.js-bookmarklet/icons/manifest.json">
 	  <meta name="msapplication-TileImage" content="/Capstone.js-bookmarklet/icons/ms-icon-144x144.png">
-	  
-
-	  
   </head>
   <body>
-    <script>   	
+	      <script>
+			function isIE () {
+			  var myNav = navigator.userAgent.toLowerCase();
+			  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+			}
+			
+			if (isIE () == 8) {
+				var html5semantic = ['SECTION', 'ARTICLE', 'ASIDE', 'HEADER', 'FOOTER', 'NAV', 'FIGURE', 'FIGCAPTION', 'TIME', 'MARK', 'MAIN'];
+				for(var i=0; i < html5semantic.length; i++) {
+		      var ele = document.createElement(html5semantic[i]);
+		      ele.style.display = 'block';
+				}
+			}
+	      	
 			var localEdits = {
 			  "Item": {
 			    "PageID": "http://williammahler.github.io/Capstone.js-bookmarklet/",
@@ -98,36 +64,15 @@
 			      {
 			        "selector": "H1,SECTION,BODY,HTML",
 			        "newContent": " Hello from BasicEdit! ",
-			        "oldContent": "Inline Disassembler Bookmarklet"
+			        "oldContent": "Inline Disassembler Bookmarklet",
 			      },
 			      {
 			        "selector": "H3,SECTION,BODY,HTML",
 			        "newContent": "Derp",
-			        "oldContent": "Usage"
+			        "oldContent": "Usage",
 			      }
 			    ]
 			  }
-			}
-			
-			
-			function isIE () {
-			  var myNav = navigator.userAgent.toLowerCase();
-			  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
-			}
-			
-			if (isIE () == 8) {
-	      var ele = document.createElement('HEADER');
-	      ele.style.display = 'block';
-	      var ele = document.createElement('NAV');
-	      ele.style.display = 'block';
-	      var ele = document.createElement('SECTION');
-	      ele.style.display = 'block';
-	      var ele = document.createElement('ARTICLE');
-	      ele.style.display = 'block';
-	      var ele = document.createElement('ASIDE');
-	      ele.style.display = 'block';
-	      var ele = document.createElement('FOOTER');
-	      ele.style.display = 'block';
 			}
 
 			var editLookup = {};
@@ -155,9 +100,8 @@
 			}
 			
 			function walkDOM(main) {
-				
 		    var arr = [];
-		    var loop = function(main) {
+		    var loop = function(main, realParent) {
 	        do {
             if(main.nodeType == 3){
 							var txt = main.textContent || main.nodeValue;
@@ -171,11 +115,11 @@
             	arr.push(getParents(main));
             }
             if(main.hasChildNodes())
-            	loop(main.firstChild);
+            	loop(main.firstChild, main);
 	        }
 	        while (main = main.nextSibling);
 		    }
-		    loop(main);
+		    loop(main, main.parentNode);
 		    
 		    return arr;
 			}
@@ -194,9 +138,7 @@
     		if(MutationObserver === undefined || !MutationObserver){
     			return;
     		}
-    		
-    		document.getElementsByTagName('body')[0].style.display = '';
-
+				
 				var observer = new MutationObserver(function(mutations) {
 					mutations.forEach(function(mutation) {
 						for (var i = 0; i < mutation.addedNodes.length; i++) {
@@ -215,34 +157,27 @@
 					characterData: false
 				};
 				 
-				var targetNode = document.body;
+				var targetNode = document;
 				observer.observe(targetNode, observerConfig);
-    	}
+				
+    		document.getElementsByTagName('html')[0].style.display = '';
+    	}    	
+    	
+    	//document.style.display = 'none';
+    	document.getElementsByTagName('html')[0].style.display = 'none';
 			
 			(function(a){"function"==typeof define&&define.amd?define(a):window['onDomReady']=a()}(function(){"use strict";function s(a){if(!q){if(!b.body)return v(s);for(q=!0;a=r.shift();)v(a)}}function t(a){(o||a.type===d||b[h]===g)&&(u(),s())}function u(){o?(b[n](l,t,e),a[n](d,t,e)):(b[j](m,t),a[j](f,t))}function v(a,b){setTimeout(a,+b>=0?b:1)}function x(a){q?v(a):r.push(a)}var a=window,b=a.document,c=b.documentElement,d="load",e=!1,f="on"+d,g="complete",h="readyState",i="attachEvent",j="detachEvent",k="addEventListener",l="DOMContentLoaded",m="onreadystatechange",n="removeEventListener",o=k in b,p=e,q=e,r=[];if(b[h]===g)v(s);else if(o)b[k](l,t,e),a[k](d,t,e);else{b[i](m,t),a[i](f,t);try{p=null==a.frameElement&&c}catch(w){}p&&p.doScroll&&function y(){if(!q){try{p.doScroll("left")}catch(a){return v(y,50)}u(),s()}}()}return x.version="1.4.0",x.isReady=function(){return q},x}));
-			var els = document.getElementsByTagName('body');
-			if(els.length > 0){
-				document.getElementsByTagName('body')[0].style.display = 'none';
-				walkDOM(document.getElementsByTagName('body')[0]);
-				setupObserver();
-				onDomReady( function() {
-					walkDOM(document.getElementsByTagName('body')[0]);
-					document.getElementsByTagName('body')[0].style.display = '';
-				});
-			}else{
-				onDomReady( function() {
-					document.getElementsByTagName('body')[0].style.display = 'none';
-					walkDOM(document.getElementsByTagName('body')[0]);
-					document.getElementsByTagName('body')[0].style.display = '';
-				});
-			}
+			walkDOM(document.getElementsByTagName('html')[0]);
+			setupObserver();
+			onDomReady( function() {
+				walkDOM(document.getElementsByTagName('html')[0]);
+				document.getElementsByTagName('html')[0].style.display = '';
+			});
+
     </script>
-  	
-  	<script>
-  		//debugger;
-  	</script>
+
     <section class="page-header">
-    	
+
       <h1 class="project-name">Inline Disassembler Bookmarklet</h1>
       
       <h2 class="project-tagline"></h2>
@@ -311,6 +246,9 @@
       </footer>
 
     </section>
+    
+    
+    
 
             <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -329,6 +267,6 @@
             */
           </script>
 
-    <!-- <script src='//basicedit.com/changes.js'></script> -->        
+    <!-- <script src='//basicedit.com/changes.js'></script> -->    
   </body>
 </html>
