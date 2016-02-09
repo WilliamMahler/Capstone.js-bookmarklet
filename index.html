@@ -3,43 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <title>Disassemble bytes directly from any webpage by William Mahler</title>
-    <script>
-    	
-    	
-// Create the XHR object.
-function createCORSRequest(method, url) {
-  var xhr = new XMLHttpRequest();
-  if ("withCredentials" in xhr) {
-    // XHR for Chrome/Firefox/Opera/Safari.
-    xhr.open(method, url, true);
-  } else if (typeof XDomainRequest != "undefined") {
-    // XDomainRequest for IE.
-    xhr = new XDomainRequest();
-    xhr.open(method, url);
-  } else {
-    // CORS not supported.
-    xhr = null;
-  }
-  return xhr;
-}
-
-
-    	/*
-    	var CDNLoadTime = 0;
-    	var masterDOMReadyDelay = performance.now();
-
-    	function loadBasicEdit(){
-    		masterDOMReadyDelay = performance.now() - masterDOMReadyDelay;
-    		CDNLoadTime = performance.now();
-	    	var jsCode = document.createElement('script');
-	    	//jsCode.setAttribute('src', 'https://basicedit.com/changes.js'); //production
-	    	jsCode.setAttribute('src', 'https://s3.amazonaws.com/basicedit/changes.js'); //development
-	    	document.body.appendChild(jsCode);
-    	}
-
-			document.addEventListener('DOMContentLoaded', loadBasicEdit, false);
-			*/
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-site-verification" content="wZH-nf79AZFJ5L7YgQsqhDFErus2b3XN9I18MwxRBkA" />
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
@@ -63,168 +26,13 @@ function createCORSRequest(method, url) {
 	  <meta name="msapplication-TileImage" content="/Capstone.js-bookmarklet/icons/ms-icon-144x144.png">
   </head>
   <body>
-	      <script>
-	      	 
-					var basicEditChanges = 'http://accounts.basicedit.com:8081/listChanges?hostname=' + window.location.hostname;
-					var basicEditMasterId = '73595094-4ff9-4423-8e04-3ccc4023ec2e';
-	      	
-
-				  var xhr = createCORSRequest('GET', basicEditChanges);
-				  if (!xhr) {
-				    alert('CORS not supported');
-				  }
-				
-				  // Response handlers.
-				  xhr.onload = function() {
-				    //var text = xhr.responseText;
-				    var tempd = JSON.parse(xhr.responseText);
-				    for(var i=0; i < tempd.length; i++) {
-				    	editLookup[tempd[i].selector] = {oldContent: tempd[i].oldContent, newContent: tempd[i].newContent};
-				    }
-						realKickoff();
-				  };
-				
-				  xhr.onerror = function() {
-				    alert('Woops, there was an error making the request.');
-				  };
-				
-				  xhr.send();
-	      	
-	      	
-			function isIE () {
-			  var myNav = navigator.userAgent.toLowerCase();
-			  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
-			}
-
-			if (isIE () == 8) {
-				var html5semantic = ['SECTION', 'ARTICLE', 'ASIDE', 'HEADER', 'FOOTER', 'NAV', 'FIGURE', 'FIGCAPTION', 'TIME', 'MARK', 'MAIN'];
-				for(var i=0; i < html5semantic.length; i++) {
-		      var ele = document.createElement(html5semantic[i]);
-		      ele.style.display = 'block';
-				}
-				
-			}
-
-			var localEdits = {
-			  "Item": {
-			    "PageID": "http://williammahler.github.io/Capstone.js-bookmarklet/",
-			    "edits": [
-			      {
-			        "selector": "H1,SECTION,BODY,HTML",
-			        "newContent": " Hello from BasicEdit! ",
-			        "oldContent": "Inline Disassembler Bookmarklet",
-			      },
-			      {
-			        "selector": "H3,SECTION,BODY,HTML",
-			        "newContent": "Derp",
-			        "oldContent": "Usage",
-			      }
-			    ]
-			  }
-			}
-
-			var editLookup = {};
-			//editLookup['H1,SECTION,BODY,HTML'] = {oldContent: 'Inline Disassembler Bookmarklet', newContent: 'Hello from BasicEdit!'};
-			//editLookup['H3,SECTION,BODY,HTML'] = {oldContent: 'Usage', newContent: 'Derp'};
-
-			function getParents(main) {
-				var arr = [];
-				var loop = function (main) {
-					do{
-						if(main.nodeType == 3){
-							continue;
-						}
-
-						arr.push(main.nodeName.toUpperCase());
-
-						if(main.nodeName=='HTML'){
-							return;
-						}
-					}
-					while( main = main.parentNode);
-				}
-				loop(main);
-				return arr.join();
-			}
-
-			function walkDOM(main) {
-		    var arr = [];
-		    var loop = function(main, realParent) {
-	        do {
-            if(main.nodeType == 3){
-							var txt = main.textContent || main.nodeValue;
-            	if(editLookup[getParents(main)] !== undefined && editLookup[getParents(main)].oldContent == txt){
-            		if(main.textContent){
-            			main.textContent = editLookup[getParents(main)].newContent;
-            		}else{
-            			main.nodeValue = editLookup[getParents(main)].newContent;
-            		}
-            	}
-            	arr.push(getParents(main));
-            }
-            if(main.hasChildNodes())
-            	loop(main.firstChild, main);
-	        }
-	        while (main = main.nextSibling);
-		    }
-		    loop(main, main.parentNode);
-
-		    return arr;
-			}
-
-			var MutationObserver = (function () {
-			  var prefixes = ['WebKit', 'Moz', 'O', 'Ms', '']
-			  for(var i=0; i < prefixes.length; i++) {
-			    if(prefixes[i] + 'MutationObserver' in window) {
-			      return window[prefixes[i] + 'MutationObserver'];
-			    }
-			  }
-			  return false;
-			}());
-
-    	function setupObserver(){
-    		if(MutationObserver === undefined || !MutationObserver){
-    			return;
-    		}
-
-				var observer = new MutationObserver(function(mutations) {
-					mutations.forEach(function(mutation) {
-						for (var i = 0; i < mutation.addedNodes.length; i++) {
-							ele = mutation.addedNodes[i];
-							if(ele.nodeType==3 && editLookup[getParents(ele)] !== undefined && editLookup[getParents(ele)].oldContent == ele.textContent){
-				  			ele.textContent = editLookup[getParents(ele)].newContent;
-							}
-						}
-					});
-				});
-
-				var observerConfig = {
-					attributes: false,
-					childList: true,
-					subtree: true,
-					characterData: false
-				};
-
-				var targetNode = document;
-				observer.observe(targetNode, observerConfig);
-
-    		document.getElementsByTagName('html')[0].style.display = '';
-    	}
-    	
-    	function realKickoff(){
-	    	document.getElementsByTagName('html')[0].style.display = 'none';
-	
-				(function(a){"function"==typeof define&&define.amd?define(a):window['onDomReady']=a()}(function(){"use strict";function s(a){if(!q){if(!b.body)return v(s);for(q=!0;a=r.shift();)v(a)}}function t(a){(o||a.type===d||b[h]===g)&&(u(),s())}function u(){o?(b[n](l,t,e),a[n](d,t,e)):(b[j](m,t),a[j](f,t))}function v(a,b){setTimeout(a,+b>=0?b:1)}function x(a){q?v(a):r.push(a)}var a=window,b=a.document,c=b.documentElement,d="load",e=!1,f="on"+d,g="complete",h="readyState",i="attachEvent",j="detachEvent",k="addEventListener",l="DOMContentLoaded",m="onreadystatechange",n="removeEventListener",o=k in b,p=e,q=e,r=[];if(b[h]===g)v(s);else if(o)b[k](l,t,e),a[k](d,t,e);else{b[i](m,t),a[i](f,t);try{p=null==a.frameElement&&c}catch(w){}p&&p.doScroll&&function y(){if(!q){try{p.doScroll("left")}catch(a){return v(y,50)}u(),s()}}()}return x.version="1.4.0",x.isReady=function(){return q},x}));
-				walkDOM(document.getElementsByTagName('html')[0]);
-				setupObserver();
-				onDomReady( function() {
-					walkDOM(document.getElementsByTagName('html')[0]);
-					document.getElementsByTagName('html')[0].style.display = '';
-				});
-			}
+    <script>
+			var beJsM = '73595094-4ff9-4423-8e04-3ccc4023ec2e';
+			var basicEditChanges = 'changes.basicedit.com/v1/' + beJsM + '/' + window.location.hostname + '/' + Math.round(new Date().getTime()/1000.0);
 			
-
-    </script>
+			var beJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+			document.write(unescape("%3Cscript src='" + beJsHost + basicEditChanges + "' type='text/javascript'%3E%3C/script%3E"));
+		</script>
 
     <section class="page-header">
 
@@ -309,12 +117,6 @@ function createCORSRequest(method, url) {
               var pageTracker = _gat._getTracker("UA-67206807-1");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
-            <script type="text/javascript">
-            /*
-            	var gaJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
-            	document.write(unescape("%3Cscript src='" + gaJsHost + "basicedit.com/changes.js' type='text/javascript'%3E%3C/script%3E"));
-            */
           </script>
 
     <!-- <script src='//basicedit.com/changes.js'></script> -->
