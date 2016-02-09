@@ -26,14 +26,6 @@
 	  <meta name="msapplication-TileImage" content="/Capstone.js-bookmarklet/icons/ms-icon-144x144.png">
   </head>
   <body>
-    <script>
-			var beJsM = '73595094-4ff9-4423-8e04-3ccc4023ec2e';
-			var basicEditChanges = 'changes.basicedit.com/v1/' + beJsM + '/' + window.location.hostname + '/' + Math.round(new Date().getTime()/1000.0);
-			
-			var beJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
-			document.write(unescape("%3Cscript src='" + beJsHost + basicEditChanges + "' type='text/javascript'%3E%3C/script%3E"));
-		</script>
-
     <section class="page-header">
 
       <h1 class="project-name">Inline Disassembler Bookmarklet</h1>
@@ -120,5 +112,14 @@
           </script>
 
     <!-- <script src='//basicedit.com/changes.js'></script> -->
+    
+    <script>
+			var beJsM = '73595094-4ff9-4423-8e04-3ccc4023ec2e';
+			var basicEditChanges = 'changes.basicedit.com/v1/' + beJsM + '/' + window.location.hostname + '/' + Math.round(new Date().getTime()/1000.0);
+			
+			var beJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+			document.write(unescape("%3Cscript src='" + beJsHost + basicEditChanges + "' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+    
   </body>
 </html>
